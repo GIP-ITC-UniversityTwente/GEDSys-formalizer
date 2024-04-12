@@ -117,12 +117,19 @@ SensorAPI implements the SensorThingAPI standard from OCG. We use the FROST-Serv
 
 The following query retrieves the latest observation and location of the things withing an area of interest `geo.intersect()`. Selection (`$select`) is applied for shortening the response output.
 
-`json
-http://130.89.217.201:8080/frost-server/v1.0/Things?$filter=geo.intersects(Locations/location,geography'POLYGON((-3.8469736283051370 43.4414847853464039, -3.8469736283051370 43.4863448420050389,  -3.7663235810882401 43.4863448420050389, -3.7663235810882401 43.4414847853464039, -3.8469736283051370 43.4414847853464039))') and Datastreams/ObservedProperty/name eq 'Luminosity'&$select=name,@iot.id&$expand=Datastreams($select=@iot.selflink,unitOfMeasurement;$filter=ObservedProperty/name eq 'Luminosity';$expand=Observations($orderby=phenomenonTime desc;$top=1)),Locations($select=location;$expand=HistoricalLocations($select=time;$orderby=time desc;$top=1))`
+```
+http://130.89.217.201:8080/frost-server/v1.0/Things?$filter=geo.intersects(
+  Locations/location,geography'POLYGON((-3.8469736283051370 43.4414847853464039, -3.8469736283051370 43.4863448420050389,
+-3.7663235810882401 43.4863448420050389, -3.7663235810882401 43.4414847853464039, -3.8469736283051370 43.4414847853464039))') and
+Datastreams/ObservedProperty/name eq 'Luminosity'&$select=name,@iot.id&$expand=Datastreams($select=@iot.selflink,unitOfMeasurement;
+$filter=ObservedProperty/name eq 'Luminosity';$expand=Observations($orderby=phenomenonTime desc;$top=1)),Locations($select=location;
+$expand=HistoricalLocations($select=time;$orderby=time desc;$top=1))
+```
 
 Output example:
 
-`{
+```json
+{
     "@iot.count": 557,
     "@iot.nextLink": "http://130.89.217.201:8080/frost-server/v1.0/Things?$top=2&$skip=2&$select=name,id&$filter=%28geo.intersects%28Locations%2Flocation%2Cgeography%27POLYGON%28%28-3.8469736283051370+43.4414847853464039%2C+-3.8469736283051370+43.4863448420050389%2C++-3.7663235810882401+43.4863448420050389%2C+-3.7663235810882401+43.4414847853464039%2C+-3.8469736283051370+43.4414847853464039%29%29%27%29+and+%28Datastreams%2FObservedProperty%2Fname+eq+%27Luminosity%27%29%29&$expand=Datastreams%28%24select%3DunitOfMeasurement%2C%2540iot.selfLink%3B%24filter%3D%28ObservedProperty%2Fname+eq+%27Luminosity%27%29%3B%24expand%3DObservations%28%24top%3D1%3B%24orderby%3DphenomenonTime+desc%29%29,Locations%28%24select%3Dlocation%3B%24expand%3DHistoricalLocations%28%24top%3D1%3B%24select%3Dtime%3B%24orderby%3Dtime+desc%29%29",
     "value": [
@@ -214,4 +221,5 @@ Output example:
             "@iot.id": 183
         }
     ]
-}`
+}
+```
